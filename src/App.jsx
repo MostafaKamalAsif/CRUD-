@@ -1,9 +1,9 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
 
+import "./App.css";
+import { getDatabase, ref, set } from "firebase/database";
 function App() {
+  const db = getDatabase();
 const [task, setTask]=useState("")
 const [show , setshow]=useState(false)
  const handelInput=(e)=>{
@@ -13,15 +13,19 @@ const [show , setshow]=useState(false)
   const handelClick=()=>{
     if (!task){
       
-      setshow(true)
+      setshow("The task is missing")
     }
     else{
-      setshow(false)
+      setshow("Congratulations Task send")
+       set(ref(db, 'todotask/' ), {
+    TaskName: task
+    
+  });
     }
   }
   return (
     <>
-      <div className="py-[250px] bg-gray-100 ">
+      <div className="py-[250px] bg-zinc-300 ">
         <div className="max-w-[1320px] m-auto">
           <div className="w-[600px] m-auto ">
             <input
@@ -29,12 +33,12 @@ const [show , setshow]=useState(false)
               placeholder="Enter Your Task"
               className="w-[600px] outline-none border-2 border-neutral-800 bg-green-100 py-5 px-4 " onChange={handelInput}
             />
-            <button className="bg-amber-200 border border-amber-600 py-3 px-5  text-center mt-5 cursor-pointer"
+            <button className={`bg-amber-200 border border-amber-600 py-3 px-5  text-center mt-5 cursor-pointer `}
             onClick={handelClick}>
               ADD Task
             </button>
             {show &&
-            <h3 className="bg-red-400 text-white text-2xl px-4 py-5 mt-5 rounded-2xl"> Input mising </h3>}
+            <h3 className={` text-white text-2xl text-center px-4 py-5 mt-5 rounded-2xl ${task  ? "bg-green-500 ":"bg-red-400"}`}>{show} </h3>}
           </div>
           <div className="overflow-x-auto mt-10 border w-[600px]  m-auto">
             <table className="w-full border-collapse ">
