@@ -5,17 +5,18 @@ import "./App.css";
 
 function App() {
 const [task, setTask]=useState("")
-
+const [show , setshow]=useState(false)
  const handelInput=(e)=>{
   setTask(e.target.value)
   
  };
   const handelClick=()=>{
     if (!task){
-      alert("Input pici")
+      
+      setshow(true)
     }
     else{
-      alert("Input pi ni")
+      setshow(false)
     }
   }
   return (
@@ -32,6 +33,8 @@ const [task, setTask]=useState("")
             onClick={handelClick}>
               ADD Task
             </button>
+            {show &&
+            <h3 className="bg-red-400 text-white text-2xl px-4 py-5 mt-5 rounded-2xl"> Input mising </h3>}
           </div>
           <div className="overflow-x-auto mt-10 border w-[600px]  m-auto">
             <table className="w-full border-collapse ">
