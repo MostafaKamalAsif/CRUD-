@@ -6,6 +6,8 @@ function App() {
   const db = getDatabase();
 const [task, setTask]=useState("")
 const [show , setshow]=useState(false)
+const [smgcolor, setsmgcolor]=useState("")
+
  const handelInput=(e)=>{
   setTask(e.target.value)
   
@@ -13,10 +15,12 @@ const [show , setshow]=useState(false)
   const handelClick=()=>{
     if (!task){
       
-      setshow("The task is missing")
+      setshow("The task is missing ")
+      setsmgcolor("bg-red-500")
     }
     else{
-      setshow("Congratulations Task send")
+      setshow("Congratulations Task send ")
+      setsmgcolor("bg-green-500")
        set(ref(db, 'todotask/' ), {
     TaskName: task
     
@@ -38,7 +42,7 @@ const [show , setshow]=useState(false)
               ADD Task
             </button>
             {show &&
-            <h3 className={` text-white text-2xl text-center px-4 py-5 mt-5 rounded-2xl ${task  ? "bg-green-500 ":"bg-red-400"}`}>{show} </h3>}
+            <h3 className={` text-white text-2xl text-center px-4 py-5 mt-5 rounded-2xl ${smgcolor}`}>{show} </h3>}
           </div>
           <div className="overflow-x-auto mt-10 border w-[600px]  m-auto">
             <table className="w-full border-collapse ">
