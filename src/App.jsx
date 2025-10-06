@@ -29,7 +29,7 @@ const [smgcolor, setsmgcolor]=useState("")
   }
   return (
     <>
-      <div className="py-[250px] bg-zinc-300 ">
+      <div className="py-[250px] bg-blue-300 ">
         <div className="max-w-[1320px] m-auto">
           <div className="w-[600px] m-auto ">
             <input
@@ -54,7 +54,7 @@ const [smgcolor, setsmgcolor]=useState("")
                 </tr>
               </thead>
               <tbody className="divide-y">
-                <tr className="hover:bg-gray-100">
+                <tr className="bg-gray-100">
                   <td className="p-3">1</td>
 
                   <td className="p-3 flex justify-center space-x-3">
