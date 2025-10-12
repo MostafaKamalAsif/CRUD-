@@ -46,7 +46,7 @@ It acts as your animated border background. | Code                              
   inset: 0;
   background: linear-gradient(
     90deg,
-    #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
+    #ff0000, #ff9900, #ffff00, #00ff00, #00ffff,  #ff00ff, #ff0000
   );
   background-size: 300% 300%;
   border-radius: 0.75rem;
@@ -67,7 +67,7 @@ It acts as your animated border background. | Code                              
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #8A2BE2, #DA70D6, #8A2BE2);
+  background: linear-gradient(90deg, #8A2BE2,#0000ff, #DA70D6, #8A2BE2);
   background-size: 300% 300%;
   border-radius: 0.75rem;
   animation: flowBorder 4s linear infinite;
@@ -122,7 +122,7 @@ It matches Gemini’s focus style (looks like energy or AI activation)
 input:focus → adds glow when user interacts*/
   outline: none;
   box-shadow: 0 0 10px #3b82f6, 0 0 20px #9333ea;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 20s ease;
 }
 
 body {
