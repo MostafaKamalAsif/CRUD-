@@ -128,3 +128,21 @@ input:focus → adds glow when user interacts*/
 body {
   font-family: 'Inter', sans-serif;
 }
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ✨ Modern AI-style animated gradient */
+.moving-gradient {
+  background: linear-gradient(-45deg,
+    #3b82f6,   /* Blue */
+    #06b6d4,   /* Cyan */
+    #8b5cf6,   /* Violet */
+    #08d4eb,   /* Pink */
+    #9333ea    /* Purple */
+  );
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+}

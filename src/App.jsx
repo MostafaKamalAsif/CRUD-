@@ -11,13 +11,13 @@ function App() {
   const [show, setShow] = useState(false);
   const [msgColor, setMsgColor] = useState("");
   const [taskView, settaskView] = useState([]);
-
+  //  Handle input
   const handleInput = (e) => {
     setTask(e.target.value);
   };
-// Data write start
+// Add task
   const handleClick = () => {
-    if (!task) {
+    if (!task.trim()) {
       setShow(" The task is missing!");
       setMsgColor("bg-red-500");
     } else {
@@ -32,7 +32,7 @@ function App() {
       setTask("")
     }
   };
-// Data write end
+
 
 // Data read start
 useEffect(()=>{
@@ -56,14 +56,24 @@ const handelDelete=((id)=>{
   remove(ref(db, 'todotask/' +id))
 });
 // Data Delete End
+ //  Delete all
+  const handleDeleteAll = () => {
+    if (window.confirm(" Are you sure you want to delete all tasks?")) {
+      remove(ref(db, "todotask/"));
+      setShow(" All tasks deleted successfully!");
+      setMsgColor("bg-red-600");
+      setTimeout(() => setShow(false), 2500);
+    }
+  };
+
   return (
     <>
   
-      <div className="py-[250px] bg-black/40 min-h-screen">
+      <div className="moving-gradient min-h-screen flex items-center justify-center">
         <div className="max-w-[1320px] m-auto">
           <div className="w-[600px] m-auto">
             {/*  Animated Input */}
-            <div className="animated-border-container m-auto mb-5">
+            <div className="animated-border-container m-auto my-10 ">
               <div className="search-inner-content">
                 <input
                   type="text"
@@ -71,7 +81,10 @@ const handelDelete=((id)=>{
                   value={task}
                   className="w-full bg-transparent py-5 px-4 text-lg rounded-lg text-gray-800 placeholder-gray-500"
                   onChange={handleInput}
-                  onClick={()=>setShow("")}
+                  onClick={()=>setShow(false)}
+                  onKeyDown={(e) => {
+                  if (e.key === "Enter") handleClick(); // 👈 Enter adds the task
+                }}
                 />
               </div>
             </div>
@@ -96,41 +109,52 @@ const handelDelete=((id)=>{
             )}
           </div>
 
-          {/*  Table */}
-          <div className="overflow-x-auto mt-10 border w-[600px] m-auto">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-                  <th className="p-3 text-left">Task</th>
-                  <th className="p-3 text-center">Actions</th>
-                  <td className="p-3 text-center"></td>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-               
-                {taskView.map((item)=>
-                     <tr className="bg-gray-100">
-                  
-                  <td className="p-3 text-black">{item.TaskName}</td>
-                  <td className="p-3 flex justify-center space-x-3">
-                    <button className="px-4 py-1 text-sm rounded-lg bg-yellow-400 text-white font-medium shadow hover:bg-yellow-500">
-                      Edit
-                    </button>
-                    <button className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600" onClick={()=>handelDelete(item.id)} >
-                      Delete
-                    </button>
-                  </td>
-                   <td className="p-3 ">
-                    <button className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600" onClick={()=>remove} >
-                     All Delete
-                    </button>
-                   </td>
-                </tr>
-                  )}
-               
-              </tbody>
-            </table>
-          </div>
+          {/* Table */}
+<div className="my-5  w-[600px] m-auto border rounded-xl overflow-hidden">
+  {/* Table header */}
+  <div className="flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-5 py-4 rounded-t-xl">
+    <h2 className="text-lg font-semibold tracking-wide">
+      Task List
+    </h2>
+    <button
+      onClick={handleDeleteAll}
+      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300"
+    >
+      Delete All
+    </button>
+  </div>
+
+  {/* Scrollable table body */}
+  <div className="h-64 overflow-y-auto">
+    <table className="w-full">
+      <thead>
+        <tr className="bg-gray-300 text-black">
+          <th className="p-3 text-left">Task</th>
+          <th className="p-3 text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y">
+        {taskView.map((item) => (
+          <tr key={item.id} className="bg-gray-100">
+            <td className="p-3 text-black">{item.TaskName}</td>
+            <td className="p-3 flex justify-center space-x-3">
+              <button className="px-4 py-1 text-sm rounded-lg bg-yellow-400 text-white font-medium shadow hover:bg-yellow-500">
+                Edit
+              </button>
+              <button
+                className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600"
+                onClick={() => handelDelete(item.id)}
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
         </div>
       </div>
     </>
