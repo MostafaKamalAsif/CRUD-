@@ -1,1 +1,130 @@
 @import "tailwindcss";
+/* App.css */
+
+/* Keyframes for border animation | Time | Background position | Effect         |
+| ---- | ------------------- | -------------- |
+| 0%   | Left side showing   | Start          |
+| 50%  | Right side showing  | Flowing across |
+| 100% | Back to left        | Loop repeats   |
+ */
+@keyframes flowBorder {                   
+  0% { background-position: 0% 50%; }    /*👉 This defines an animation timeline called flowBorder.It moves the gradient background horizontally — left → right → left — to create that “flowing light” effect you see around the border.*/
+  50% { background-position: 100% 50%; }     
+  100% { background-position: 0% 50%; }
+}
+
+/* 🟢 Input Border Animation  
+*/   
+.animated-border-container {/*That small padding is the border thickness.
+The ::before layer fills the whole container (including padding),
+and your actual input sits inside with a solid inner background, creating the illusion of a flowing animated border around it.*/
+  position: relative;
+  padding: 4px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  width: 600px;
+  transition: all 0.3s ease;
+}
+
+.animated-border-container:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.animated-border-container::before { /*🔹 .animated-border-container::before creates a fake extra layer (a “pseudo-element”) under your input.
+It acts as your animated border background. | Code                                       | Meaning                                                        |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| `content: ""`                              | Creates the pseudo-element                                     |
+| `position: absolute` & `inset: 0`          | Makes it fill the entire border area                           |
+| `background: linear-gradient(...)`         | The multicolor gradient (blue → green → orange → red → purple) |
+| `background-size: 300% 300%`               | Makes the gradient much larger than the box, so it can move    |
+| `animation: flowBorder 4s linear infinite` | Applies the animation we defined earlier                       |
+| `border-radius: 0.75rem`                   | Smooth rounded corners                                         |
+| `z-index: 1`                               | Puts it **under** the input layer                              |*/
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000
+  );
+  background-size: 300% 300%;
+  border-radius: 0.75rem;
+  animation: flowBorder 4s linear infinite;
+  z-index: 1;
+}
+
+/* 🩵 Button Border Animation */
+.animated-border-button {
+  position: relative;
+  padding: 4px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.animated-border-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #8A2BE2, #DA70D6, #8A2BE2);
+  background-size: 300% 300%;
+  border-radius: 0.75rem;
+  animation: flowBorder 4s linear infinite;
+  z-index: 1;
+}
+
+.animated-inner {
+  position: relative;
+  z-index: 2;
+  background: #fde68a;
+  color: #111;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.animated-inner:hover {
+  background: #fcd34d;
+  box-shadow: 0 0 15px rgba(66, 133, 244, 0.6);
+}
+
+.search-inner-content {/*This ensures:
+
+The input stays above the animated layer (so you can see the text)
+
+The inside background is a little translucent, letting the border shine subtly*/
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 0.5rem;
+}
+
+.search-inner-content input:focus {
+    /*When you click on the input:
+
+A soft blue–purple glow appears
+
+It matches Gemini’s focus style (looks like energy or AI activation)
+💡 Summary Flow
+
+.animated-border-container → creates the frame + padding for the border
+
+::before → draws the colorful animated gradient background
+
+@keyframes flowBorder → moves the gradient continuously
+
+.search-inner-content → holds the actual input on top of that animation
+
+input:focus → adds glow when user interacts*/
+  outline: none;
+  box-shadow: 0 0 10px #3b82f6, 0 0 20px #9333ea;
+  transition: box-shadow 0.3s ease;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
