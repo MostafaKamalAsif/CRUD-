@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { getDatabase, ref, set,push,onValue } from "firebase/database";
+import { getDatabase, ref, set,push,onValue,remove } from "firebase/database";
 
 // 💫 Custom CSS for animated borders
 
@@ -21,14 +21,14 @@ function App() {
       setShow(" The task is missing!");
       setMsgColor("bg-red-500");
     } else {
-      
+      setShow(" Congratulations! Task sent.");
+      setMsgColor("bg-green-500");
      
       set(push(ref(db, "todotask/")), {
         TaskName: task,
         
       })
-      setShow(" Congratulations! Task sent.");
-      setMsgColor("bg-green-500");
+      
       setTask("")
     }
   };
@@ -50,6 +50,12 @@ settaskView(arr)
 });
 },[])
 // Data read end
+
+// Data Delete start
+const handelDelete=((id)=>{
+  remove(ref(db, 'todotask/' +id))
+});
+// Data Delete End
   return (
     <>
   
@@ -65,6 +71,7 @@ settaskView(arr)
                   value={task}
                   className="w-full bg-transparent py-5 px-4 text-lg rounded-lg text-gray-800 placeholder-gray-500"
                   onChange={handleInput}
+                  onClick={()=>setShow("")}
                 />
               </div>
             </div>
@@ -96,21 +103,28 @@ settaskView(arr)
                 <tr className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
                   <th className="p-3 text-left">Task</th>
                   <th className="p-3 text-center">Actions</th>
+                  <td className="p-3 text-center"></td>
                 </tr>
               </thead>
               <tbody className="divide-y">
+               
                 {taskView.map((item)=>
                      <tr className="bg-gray-100">
                   
-                  <td className="p-3 text-black">{item.task}</td>
+                  <td className="p-3 text-black">{item.TaskName}</td>
                   <td className="p-3 flex justify-center space-x-3">
                     <button className="px-4 py-1 text-sm rounded-lg bg-yellow-400 text-white font-medium shadow hover:bg-yellow-500">
                       Edit
                     </button>
-                    <button className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600">
+                    <button className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600" onClick={()=>handelDelete(item.id)} >
                       Delete
                     </button>
                   </td>
+                   <td className="p-3 ">
+                    <button className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600" onClick={()=>remove} >
+                     All Delete
+                    </button>
+                   </td>
                 </tr>
                   )}
                
