@@ -110,7 +110,7 @@ const handelDelete=((id)=>{
           </div>
 
           {/* Table */}
-<div className="my-5  w-[600px] m-auto border rounded-xl overflow-hidden">
+<div className="my-5  w-[600px] m-auto  rounded-xl overflow-hidden">
   {/* Table header */}
   <div className="flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-5 py-4 rounded-t-xl">
     <h2 className="text-lg font-semibold tracking-wide">
@@ -125,7 +125,7 @@ const handelDelete=((id)=>{
   </div>
 
   {/* Scrollable table body */}
-  <div className="h-64 overflow-y-auto">
+  <div className="min-h-64 overflow-y-auto ">
     <table className="w-full">
       <thead>
         <tr className="bg-gray-300 text-black">
