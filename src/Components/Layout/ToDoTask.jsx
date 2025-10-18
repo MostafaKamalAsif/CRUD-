@@ -1,70 +1,70 @@
-import React from 'react'
-import { useEffect, useState } from "react";
-import { getDatabase, ref, set,push,onValue,remove } from "firebase/database";
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { getDatabase, ref, push, onValue, remove } from "firebase/database";
+import { useNavigate } from "react-router-dom";
+
 const ToDoTask = () => {
-      const db = getDatabase();
-      const [task, setTask] = useState("");
-      const [show, setShow] = useState(false);
-      const [msgColor, setMsgColor] = useState("");
-      const [taskView, settaskView] = useState([]);
-      //  Handle input
-      const handleInput = (e) => {
-        setTask(e.target.value);
-      };
-    // Add task
-      const handleClick = () => {
-        if (!task.trim()) {
-          setShow(" The task is missing!");
-          setMsgColor("bg-red-500");
-        } else {
-          setShow(" Congratulations! Task sent.");
-          setMsgColor("bg-green-500");
-         
-          set(push(ref(db, "todotask/")), {
-            TaskName: task,
-            
-          })
-          
-          setTask("")
-        }
-      };
-    
-    
-    // Data read start
-    useEffect(()=>{
-      const ToDoTaskref = ref(db, 'todotask/');
-    
+  const db = getDatabase();
+  const [task, setTask] = useState("");
+  const [show, setShow] = useState(false);
+  const [msgColor, setMsgColor] = useState("");
+  const [taskView, setTaskView] = useState([]);
+  const navigate = useNavigate();
+
+  // Handle input
+  const handleInput = (e) => {
+    setTask(e.target.value);
+  };
+
+  // Add task
+  const handleClick = () => {
+    if (!task.trim()) {
+      setShow(" The task is missing!");
+      setMsgColor("bg-red-500");
+    } else {
+      setShow(" Congratulations! Task sent.");
+      setMsgColor("bg-green-500");
+      push(ref(db, "todotask/"), {
+        TaskName: task,
+      });
+      setTask("");
+    }
+  };
+
+  // Read data
+  useEffect(() => {
+    const ToDoTaskref = ref(db, "todotask/");
     onValue(ToDoTaskref, (snapshot) => {
-      let arr=[];
-      snapshot.forEach((item)=>{
-        arr.push({...item.val(), id:item.key})
-        console.log(item.key);
-        
-      })
-    settaskView(arr)
-     
+      let arr = [];
+      snapshot.forEach((item) => {
+        arr.push({ ...item.val(), id: item.key });
+      });
+      setTaskView(arr);
     });
-    },[])
-    // Data read end
-    
-    // Data Delete start
-    const handelDelete=((id)=>{
-      remove(ref(db, 'todotask/' +id))
-    });
-    // Data Delete End
-     //  Delete all
-      const handleDeleteAll = () => {
-        if (window.confirm(" Are you sure you want to delete all tasks?")) {
-          remove(ref(db, "todotask/"));
-          setShow(" All tasks deleted successfully!");
-          setMsgColor("bg-red-600");
-          setTimeout(() => setShow(false), 2500);
-        }
-      };
+  }, [db]);
+
+  // Delete single
+  const handelDelete = (id) => {
+    remove(ref(db, "todotask/" + id));
+  };
+
+  // Delete all
+  const handleDeleteAll = () => {
+    if (window.confirm(" Are you sure you want to delete all tasks?")) {
+      remove(ref(db, "todotask/"));
+      setShow(" All tasks deleted successfully!");
+      setMsgColor("bg-red-600");
+      setTimeout(() => setShow(false), 2500);
+    }
+  };
+
+  // Edit
+  const handleEditBtn = (id) => {
+    navigate(`/editpages/${id}`);
+  };
+
   return (
-   <>
-     <div className="moving-gradient min-h-screen flex items-center justify-center">
+    <>
+      <div className="moving-gradient min-h-screen flex items-center justify-center">
         <div className="max-w-[1320px] m-auto">
           <div className="w-[600px] m-auto">
             {/*  Animated Input */}
@@ -76,20 +76,17 @@ const ToDoTask = () => {
                   value={task}
                   className="w-full bg-transparent py-5 px-4 text-lg rounded-lg text-gray-800 placeholder-gray-500"
                   onChange={handleInput}
-                  onClick={()=>setShow(false)}
+                  onClick={() => setShow(false)}
                   onKeyDown={(e) => {
-                  if (e.key === "Enter") handleClick(); // 👈 Enter adds the task
-                }}
+                    if (e.key === "Enter") handleClick(); // 👈 Enter adds the task
+                  }}
                 />
               </div>
             </div>
 
             {/*  Animated Button */}
             <div className="animated-border-button mt-6">
-              <button
-                className="animated-inner"
-                onClick={handleClick}
-              >
+              <button className="animated-inner" onClick={handleClick}>
                 ADD Task
               </button>
             </div>
@@ -105,57 +102,58 @@ const ToDoTask = () => {
           </div>
 
           {/* Table */}
-<div className="my-5  w-[600px] m-auto  rounded-xl overflow-hidden">
-  {/* Table header */}
-  <div className="flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-5 py-4 rounded-t-xl">
-    <h2 className="text-lg font-semibold tracking-wide">
-      Task List
-    </h2>
-    <button
-      onClick={handleDeleteAll}
-      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300"
-    >
-      Delete All
-    </button>
-  </div>
-
-  {/* Scrollable table body */}
-  <div className="min-h-64 overflow-y-auto ">
-    <table className="w-full">
-      <thead>
-        <tr className="bg-gray-300 text-black">
-          <th className="p-3 text-left">Task</th>
-          <th className="p-3 text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y">
-        {taskView.map((item) => (
-          <tr key={item.id} className="bg-gray-100">
-            <td className="p-3 text-black">{item.TaskName}</td>
-            <td className="p-3 flex justify-center space-x-3">
-                <Link to={"editpages"}>
-              <button className="px-4 py-1 text-sm rounded-lg bg-yellow-400 text-white font-medium shadow hover:bg-yellow-500">
-                Edit
-              </button>
-              </Link>
+          <div className="my-5  w-[600px] m-auto  rounded-xl overflow-hidden">
+            {/* Table header */}
+            <div className="flex justify-between items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-5 py-4 rounded-t-xl">
+              <h2 className="text-lg font-semibold tracking-wide">
+                Task List
+              </h2>
               <button
-                className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600"
-                onClick={() => handelDelete(item.id)}
+                onClick={handleDeleteAll}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition duration-300"
               >
-                Delete
+                Delete All
               </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
+            </div>
 
+            {/* Scrollable table body */}
+            <div className="min-h-64 overflow-y-auto ">
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-300 text-black">
+                    <th className="p-3 text-left">Task</th>
+                    <th className="p-3 text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y">
+                  {taskView.map((item) => (
+                    <tr key={item.id} className="bg-gray-100">
+                      <td className="p-3 text-black">{item.TaskName}</td>
+                      <td className="p-3 flex justify-center space-x-3">
+                        <button
+                          className="px-4 py-1 text-sm rounded-lg bg-yellow-400 text-white font-medium shadow hover:bg-yellow-500"
+                          onClick={() => handleEditBtn(item.id)}
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          className="px-4 py-1 text-sm rounded-lg bg-red-500 text-white font-medium shadow hover:bg-red-600"
+                          onClick={() => handelDelete(item.id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-   </>
-  )
-}
+    </>
+  );
+};
 
-export default ToDoTask
+export default ToDoTask;
