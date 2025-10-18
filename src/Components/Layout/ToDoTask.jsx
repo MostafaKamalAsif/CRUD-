@@ -65,7 +65,9 @@ const ToDoTask = () => {
   return (
     <>
       <div className="moving-gradient min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8">
+        
         <div className="max-w-[1320px] w-full">
+          <h1 className="text-black text-4xl text-center font-bold pb-5">TO DO Task</h1>
           <div className="w-full max-w-[600px] m-auto">
             {/*  Animated Input */}
             <div className="animated-border-container m-auto my-10">
