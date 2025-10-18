@@ -37,13 +37,13 @@ const EditPages = () => {
       <div className="moving-gradient min-h-screen">
         <div className="max-w-[1240px] m-auto py-[120px] text-center">
           <div className="flex justify-center">
-            <Input
-              value={updateTask}
-              onChange={(e) => setUpdateTask(e.target.value)}
-              type="text"
-              className="w-[600px] bg-gray-300"
-              placeholder="Update Task"
-            />
+           <Input
+  value={updateTask}
+  onChange={(e) => setUpdateTask(e.target.value)}
+  type="text"
+  className="w-full max-w-[600px] bg-gray-300  mx-4 sm:mx-auto"
+  placeholder="Update Task"
+/>
           </div>
           <Button
             className="my-5 bg-gray-500 text-white cursor-pointer duration-500"

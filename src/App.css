@@ -1,32 +1,30 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* 🌗 Dark mode variant */
 @custom-variant dark (&:is(.dark *));
-/* App.css */
 
-/* Keyframes for border animation | Time | Background position | Effect         |
-| ---- | ------------------- | -------------- |
-| 0%   | Left side showing   | Start          |
-| 50%  | Right side showing  | Flowing across |
-| 100% | Back to left        | Loop repeats   |
- */
-@keyframes flowBorder {                   
-  0% { background-position: 0% 50%; }    /*👉 This defines an animation timeline called flowBorder.It moves the gradient background horizontally — left → right → left — to create that “flowing light” effect you see around the border.*/
-  50% { background-position: 100% 50%; }     
+/* ---------------------------
+   🔄 Flowing Border Animation
+--------------------------- */
+@keyframes flowBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* 🟢 Input Border Animation  
-*/   
-.animated-border-container {/*That small padding is the border thickness.
-The ::before layer fills the whole container (including padding),
-and your actual input sits inside with a solid inner background, creating the illusion of a flowing animated border around it.*/
+/* ============================
+   🟢 Animated Border Container
+============================ */
+.animated-border-container {
   position: relative;
   padding: 4px;
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  width: 600px;
+  width: 100%;
+  max-width: 600px; /* ✅ Responsive width */
+  margin: 0 auto;
   transition: all 0.3s ease;
 }
 
@@ -34,22 +32,14 @@ and your actual input sits inside with a solid inner background, creating the il
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
-.animated-border-container::before { /*🔹 .animated-border-container::before creates a fake extra layer (a “pseudo-element”) under your input.
-It acts as your animated border background. | Code                                       | Meaning                                                        |
-| ------------------------------------------ | -------------------------------------------------------------- |
-| `content: ""`                              | Creates the pseudo-element                                     |
-| `position: absolute` & `inset: 0`          | Makes it fill the entire border area                           |
-| `background: linear-gradient(...)`         | The multicolor gradient (blue → green → orange → red → purple) |
-| `background-size: 300% 300%`               | Makes the gradient much larger than the box, so it can move    |
-| `animation: flowBorder 4s linear infinite` | Applies the animation we defined earlier                       |
-| `border-radius: 0.75rem`                   | Smooth rounded corners                                         |
-| `z-index: 1`                               | Puts it **under** the input layer                              |*/
+.animated-border-container::before {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     90deg,
-    #ff0000, #ff9900, #ffff00, #00ff00, #00ffff,  #ff00ff, #ff0000
+    #ff0000, #ff9900, #ffff00, #00ff00,
+    #00ffff, #ff00ff, #ff0000
   );
   background-size: 300% 300%;
   border-radius: 0.75rem;
@@ -57,26 +47,44 @@ It acts as your animated border background. | Code                              
   z-index: 1;
 }
 
-/* 🩵 Button Border Animation */
+/* ✅ Mobile optimization for border */
+@media (max-width: 640px) {
+  .animated-border-container {
+    padding: 3px;
+    border-radius: 0.5rem;
+  }
+
+  .animated-border-container::before {
+    animation: flowBorder 6s linear infinite; /* smoother on mobile */
+  }
+}
+
+/* ============================
+   💛 Animated Border Button
+============================ */
 .animated-border-button {
   position: relative;
   padding: 4px;
   border-radius: 0.75rem;
   overflow: hidden;
   display: inline-block;
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
 }
 
 .animated-border-button::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, #8A2BE2,#0000ff, #DA70D6, #8A2BE2);
+  background: linear-gradient(90deg, #8A2BE2, #0000ff, #DA70D6, #8A2BE2);
   background-size: 300% 300%;
   border-radius: 0.75rem;
   animation: flowBorder 4s linear infinite;
   z-index: 1;
 }
 
+/* ✅ Inner button style */
 .animated-inner {
   position: relative;
   z-index: 2;
@@ -95,68 +103,172 @@ It acts as your animated border background. | Code                              
   box-shadow: 0 0 15px rgba(66, 133, 244, 0.6);
 }
 
-.search-inner-content {/*This ensures:
+/* ✅ Responsive button scaling */
+@media (max-width: 480px) {
+  .animated-border-button {
+    max-width: 160px;
+    padding: 2px;
+  }
 
-The input stays above the animated layer (so you can see the text)
+  .animated-inner {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
 
-The inside background is a little translucent, letting the border shine subtly*/
+/* ============================
+   🔍 Search Inner Content
+============================ */
+.search-inner-content {
   position: relative;
   z-index: 2;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
 .search-inner-content input:focus {
-    /*When you click on the input:
-
-A soft blue–purple glow appears
-
-It matches Gemini’s focus style (looks like energy or AI activation)
-💡 Summary Flow
-
-.animated-border-container → creates the frame + padding for the border
-
-::before → draws the colorful animated gradient background
-
-@keyframes flowBorder → moves the gradient continuously
-
-.search-inner-content → holds the actual input on top of that animation
-
-input:focus → adds glow when user interacts*/
   outline: none;
   box-shadow: 0 0 10px #3b82f6, 0 0 20px #9333ea;
-  transition: box-shadow 20s ease;
+  transition: box-shadow 0.2s ease;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
+@media (max-width: 640px) {
+  .search-inner-content {
+    padding: 0.4rem;
+  }
 }
+
+/* ============================
+   🩵 Gradient Background
+============================ */
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* ✨ Modern AI-style animated gradient */
 .moving-gradient {
-  background: linear-gradient(-45deg,
-    #3b82f6,   /* Blue */
-    #06b6d4,   /* Cyan */
-    #8b5cf6,   /* Violet */
-    #08d4eb,   /* Pink */
-    #9333ea    /* Purple */
+  background: linear-gradient(
+    -45deg,
+    #3b82f6,
+    #06b6d4,
+    #8b5cf6,
+    #08d4eb,
+    #9333ea
   );
   background-size: 400% 400%;
   animation: gradientMove 12s ease infinite;
 }
 
-@theme inline { --radius-sm: calc(var(--radius) - 4px); --radius-md: calc(var(--radius) - 2px); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) + 4px); --color-background: var(--background); --color-foreground: var(--foreground); --color-card: var(--card); --color-card-foreground: var(--card-foreground); --color-popover: var(--popover); --color-popover-foreground: var(--popover-foreground); --color-primary: var(--primary); --color-primary-foreground: var(--primary-foreground); --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground); --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring); --color-chart-1: var(--chart-1); --color-chart-2: var(--chart-2); --color-chart-3: var(--chart-3); --color-chart-4: var(--chart-4); --color-chart-5: var(--chart-5); --color-sidebar: var(--sidebar); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-border: var(--sidebar-border); --color-sidebar-ring: var(--sidebar-ring);
+/* ============================
+   🧠 Base + Dark Theme Vars
+============================ */
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
-:root { --radius: 0.625rem; --background: oklch(1 0 0); --foreground: oklch(0.147 0.004 49.25); --card: oklch(1 0 0); --card-foreground: oklch(0.147 0.004 49.25); --popover: oklch(1 0 0); --popover-foreground: oklch(0.147 0.004 49.25); --primary: oklch(0.216 0.006 56.043); --primary-foreground: oklch(0.985 0.001 106.423); --secondary: oklch(0.97 0.001 106.424); --secondary-foreground: oklch(0.216 0.006 56.043); --muted: oklch(0.97 0.001 106.424); --muted-foreground: oklch(0.553 0.013 58.071); --accent: oklch(0.97 0.001 106.424); --accent-foreground: oklch(0.216 0.006 56.043); --destructive: oklch(0.577 0.245 27.325); --border: oklch(0.923 0.003 48.717); --input: oklch(0.923 0.003 48.717); --ring: oklch(0.709 0.01 56.259); --chart-1: oklch(0.646 0.222 41.116); --chart-2: oklch(0.6 0.118 184.704); --chart-3: oklch(0.398 0.07 227.392); --chart-4: oklch(0.828 0.189 84.429); --chart-5: oklch(0.769 0.188 70.08); --sidebar: oklch(0.985 0.001 106.423); --sidebar-foreground: oklch(0.147 0.004 49.25); --sidebar-primary: oklch(0.216 0.006 56.043); --sidebar-primary-foreground: oklch(0.985 0.001 106.423); --sidebar-accent: oklch(0.97 0.001 106.424); --sidebar-accent-foreground: oklch(0.216 0.006 56.043); --sidebar-border: oklch(0.923 0.003 48.717); --sidebar-ring: oklch(0.709 0.01 56.259);
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.147 0.004 49.25);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.147 0.004 49.25);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.147 0.004 49.25);
+  --primary: oklch(0.216 0.006 56.043);
+  --primary-foreground: oklch(0.985 0.001 106.423);
+  --secondary: oklch(0.97 0.001 106.424);
+  --secondary-foreground: oklch(0.216 0.006 56.043);
+  --muted: oklch(0.97 0.001 106.424);
+  --muted-foreground: oklch(0.553 0.013 58.071);
+  --accent: oklch(0.97 0.001 106.424);
+  --accent-foreground: oklch(0.216 0.006 56.043);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.923 0.003 48.717);
+  --input: oklch(0.923 0.003 48.717);
+  --ring: oklch(0.709 0.01 56.259);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0.001 106.423);
+  --sidebar-foreground: oklch(0.147 0.004 49.25);
+  --sidebar-primary: oklch(0.216 0.006 56.043);
+  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
+  --sidebar-accent: oklch(0.97 0.001 106.424);
+  --sidebar-accent-foreground: oklch(0.216 0.006 56.043);
+  --sidebar-border: oklch(0.923 0.003 48.717);
+  --sidebar-ring: oklch(0.709 0.01 56.259);
 }
 
-.dark { --background: oklch(0.147 0.004 49.25); --foreground: oklch(0.985 0.001 106.423); --card: oklch(0.216 0.006 56.043); --card-foreground: oklch(0.985 0.001 106.423); --popover: oklch(0.216 0.006 56.043); --popover-foreground: oklch(0.985 0.001 106.423); --primary: oklch(0.923 0.003 48.717); --primary-foreground: oklch(0.216 0.006 56.043); --secondary: oklch(0.268 0.007 34.298); --secondary-foreground: oklch(0.985 0.001 106.423); --muted: oklch(0.268 0.007 34.298); --muted-foreground: oklch(0.709 0.01 56.259); --accent: oklch(0.268 0.007 34.298); --accent-foreground: oklch(0.985 0.001 106.423); --destructive: oklch(0.704 0.191 22.216); --border: oklch(1 0 0 / 10%); --input: oklch(1 0 0 / 15%); --ring: oklch(0.553 0.013 58.071); --chart-1: oklch(0.488 0.243 264.376); --chart-2: oklch(0.696 0.17 162.48); --chart-3: oklch(0.769 0.188 70.08); --chart-4: oklch(0.627 0.265 303.9); --chart-5: oklch(0.645 0.246 16.439); --sidebar: oklch(0.216 0.006 56.043); --sidebar-foreground: oklch(0.985 0.001 106.423); --sidebar-primary: oklch(0.488 0.243 264.376); --sidebar-primary-foreground: oklch(0.985 0.001 106.423); --sidebar-accent: oklch(0.268 0.007 34.298); --sidebar-accent-foreground: oklch(0.985 0.001 106.423); --sidebar-border: oklch(1 0 0 / 10%); --sidebar-ring: oklch(0.553 0.013 58.071);
+.dark {
+  --background: oklch(0.147 0.004 49.25);
+  --foreground: oklch(0.985 0.001 106.423);
+  --card: oklch(0.216 0.006 56.043);
+  --card-foreground: oklch(0.985 0.001 106.423);
+  --popover: oklch(0.216 0.006 56.043);
+  --popover-foreground: oklch(0.985 0.001 106.423);
+  --primary: oklch(0.923 0.003 48.717);
+  --primary-foreground: oklch(0.216 0.006 56.043);
+  --secondary: oklch(0.268 0.007 34.298);
+  --secondary-foreground: oklch(0.985 0.001 106.423);
+  --muted: oklch(0.268 0.007 34.298);
+  --muted-foreground: oklch(0.709 0.01 56.259);
+  --accent: oklch(0.268 0.007 34.298);
+  --accent-foreground: oklch(0.985 0.001 106.423);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.553 0.013 58.071);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.216 0.006 56.043);
+  --sidebar-foreground: oklch(0.985 0.001 106.423);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
+  --sidebar-accent: oklch(0.268 0.007 34.298);
+  --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.553 0.013 58.071);
 }
 
 @layer base {
