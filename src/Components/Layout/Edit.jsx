@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "/src/Components/ui/input";
+import { Button } from "/src/Components/ui/button";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getDatabase, ref, onValue, update } from "firebase/database";
 
