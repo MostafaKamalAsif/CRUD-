@@ -1,8 +1,11 @@
 import React from 'react'
+import Edit from '../Layout/Edit'
 
 const EditPages = () => {
   return (
-    <div>EditPages</div>
+    <>
+    <Edit/>
+    </>
   )
 }
 
